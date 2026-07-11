@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>J // PASSIONE</title>
+<style>
+  :root {
+    --pink: #ff007f;
+    --gold: #ffcc00;
+    --dark: #1a0011;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; }
+
+  body {
+    background: radial-gradient(ellipse at center, #2a0020 0%, #0a0008 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--gold);
+    position: relative;
+  }
+
+  /* ===== ФОН: иероглифы ===== */
+  .kanji-bg {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    overflow: hidden; z-index: 0;
+    pointer-events: none;
+  }
+  .kanji {
+    position: absolute;
+    color: var(--pink);
+    opacity: 0.35;
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--pink);
+    animation: floatKanji linear infinite;
+  }
+  @keyframes floatKanji {
+    0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10%,90% { opacity: 0.4; }
+    100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ===== СТЕНДЫ НА ФОНЕ ===== */
+  .stand {
+    position: fixed;
+    font-family: 'Arial Black', sans-serif;
+    font-weight: 900;
+    opacity: 0.08;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    text-align: center;
+    line-height: 0.9;
+    animation: pulseStand 6s ease-in-out infinite;
+  }
+  .stand small {
+    display: block;
+    font-size: 1rem;
+    letter-spacing: 6px;
+    margin-top: 8px;
+    font-family: 'Courier New', monospace;
+  }
+  .stand-1 { top: 15%; left: 3%; font-size: 7rem; color: var(--gold); text-shadow: 0 0 30px var(--gold), 5px 5px 0 var(--pink); transform: rotate(-8deg); }
+  .stand-2 { bottom: 15%; right: 3%; font-size: 6rem; color: var(--pink); text-shadow: 0 0 30px var(--pink), -5px 5px 0 var(--gold); transform: rotate(5deg); animation-delay: 2s; }
+  .stand-3 { top: 50%; left: 42%; font-size: 5rem; color: #fff; text-shadow: 0 0 30px #fff, 3px 3px 0 var(--pink); transform: rotate(-3deg); animation-delay: 4s; opacity: 0.05; }
+  @keyframes pulseStand {
+    0%,100% { opacity: 0.08; }
+    50%     { opacity: 0.15; }
+  }
+
+  /* ===== ОСНОВНАЯ КАРТОЧКА ===== */
+  .card {
+    position: relative;
+    z-index: 10;
+    max-width: 550px;
+    margin: 60px auto;
+    padding: 40px;
+    border: 3px solid var(--gold);
+    border-radius: 5px;
+    background: rgba(20,0,15,0.6);
+    box-shadow: 0 0 30px var(--pink);
+    text-align: center;
+  }
+
+  .avatar {
+    width: 180px; height: 180px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--gold) 0%, var(--pink) 60%, transparent 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    color: #fff;
+    font-family: 'Arial Black', sans-serif;
+    box-shadow: 0 0 60px var(--pink);
+  }
+
+  .name {
+    font-size: 100px;
+    color: var(--gold);
+    text-shadow: 4px 4px 0 var(--pink);
+    letter-spacing: 5px;
+    margin: 10px 0;
+  }
+
+  .subtitle { color: var(--gold); letter-spacing: 3px; font-size: 14px; margin-top: 15px; }
+  .stand-name { color: var(--gold); letter-spacing: 3px; font-size: 14px; margin: 10px 0 25px; }
+
+  .info-list { text-align: left; margin: 20px 0; font-size: 14px; line-height: 1.8; }
+  .info-list span { color: var(--pink); }
+
+  .facts {
+    border: 1.5px solid var(--pink);
+    padding: 15px 20px;
+    margin: 20px 0;
+    text-align: left;
+    font-size: 13px;
+    line-height: 2;
+  }
+  .facts b { color: var(--pink); }
+
+  /* Полосы характеристик */
+  .stat { margin: 15px 0; text-align: left; }
+  .stat-header { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 3px; margin-bottom: 4px; }
+  .stat-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .stat-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pink), var(--gold));
+    border-radius: 4px;
+  }
+
+  
+  .slideshow {
+    position: relative;
+    margin: 30px 0;
+    border: 2px solid var(--pink);
+    box-shadow: 0 0 20px var(--pink);
+    overflow: hidden;
+    background: #000;
+  }
+  .slide-title {
+    color: var(--pink);
+    font-size: 13px;
+    letter-spacing: 4px;
+    padding: 10px;
+    background: rgba(0,0,0,0.6);
+    border-bottom: 1px solid var(--pink);
+  }
+  .slides-wrap {
+    position: relative;
+    height: 350px;
+    overflow: hidden;
+  }
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--pink), var(--gold));
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+  }
+  .slide img { width: 100%; height: 100%; object-fit: cover; }
+  .slide.active { opacity: 1; }
+
+  .slide-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: rgba(0,0,0,0.6);
+    border-top: 1px solid var(--pink);
+  }
+  .slide-nav button {
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    padding: 6px 15px;
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    letter-spacing: 2px;
+    font-size: 12px;
+    transition: 0.2s;
+  }
+  .slide-nav button:hover {
+    background: var(--gold);
+    color: var(--dark);
+    box-shadow: 0 0 10px var(--gold);
+  }
+  .slide-counter { color: var(--pink); font-size: 12px; align-self: center; letter-spacing: 3px; }
+
+  /* Кнопки соцсетей */
+  .social-btn {
+    display: block;
+    padding: 18px;
+    margin: 15px 0;
+    border: 2px solid var(--pink);
+    background: rgba(50,0,30,0.5);
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 3px;
+    font-size: 14px;
+    transition: 0.3s;
+  }
+  .social-btn:hover {
+    background: var(--pink);
+    color: #fff;
+    box-shadow: 0 0 20px var(--pink);
+    transform: translateY(-2px);
+  }
+  .social-btn .sub { display: block; font-size: 11px; margin-top: 5px; opacity: 0.8; }
+
+  .footer { color: var(--pink); font-size: 12px; letter-spacing: 3px; margin-top: 25px; }
+
+  /* ===== ПЛЕЕР ВНИЗУ СПРАВА ===== */
+  .soundpad {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 290px;
+    padding: 15px;
+    border: 2px solid var(--pink);
+    background: rgba(20,0,15,0.9);
+    z-index: 20;
+    box-shadow: 0 0 20px var(--pink);
+  }
+  .soundpad .title {
+    text-align: center;
+    color: var(--pink);
+    font-size: 13px;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+  }
+  .track-name {
+    text-align: center;
+    color: var(--gold);
+    font-size: 12px;
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px dashed var(--gold);
+    letter-spacing: 2px;
+  }
+  .soundpad .btns {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+  .soundpad button {
+    flex: 1;
+    padding: 8px 3px;
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .soundpad button:hover {
+    background: var(--gold);
+    color: var(--dark);
+    box-shadow: 0 0 10px var(--gold);
+  }
+  .soundpad .vol-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--gold);
+    margin-top: 10px;
+  }
+  .soundpad input[type=range] {
+    flex: 1;
+    accent-color: var(--pink);
+  }
+  .soundpad .status {
+    text-align: center;
+    color: var(--pink);
+    font-size: 11px;
+    margin-top: 8px;
+  }
+
+
+  /* ============================================
+   📱 АДАПТИВНОСТЬ ДЛЯ ВСЕХ УСТРОЙСТВ
+============================================ */
+
+/* 🖥️ БОЛЬШИЕ ЭКРАНЫ (ПК, мониторы 1400px+) */
+@media (min-width: 1400px) {
+  .card {
+    max-width: 650px;
+    padding: 50px;
+  }
+  .name { font-size: 120px; }
+  .avatar { width: 220px; height: 220px; font-size: 100px; }
+  .stand-1 { font-size: 9rem; }
+  .stand-2 { font-size: 8rem; }
+  .stand-3 { font-size: 7rem; }
+}
+
+/* 💻 НОУТБУКИ (1024px - 1399px) - базовые стили уже подходят */
+@media (max-width: 1399px) and (min-width: 1024px) {
+  .card {
+    max-width: 550px;
+    margin: 40px auto;
+  }
+  .soundpad {
+    width: 270px;
+  }
+}
+
+/* 📱 ПЛАНШЕТЫ (768px - 1023px) */
+@media (max-width: 1023px) {
+  .card {
+    max-width: 90%;
+    padding: 30px;
+    margin: 30px auto;
+  }
+  .name { font-size: 70px; letter-spacing: 3px; }
+  .avatar { width: 150px; height: 150px; font-size: 60px; }
+  
+  /* Стенды делаем меньше */
+  .stand-1 { font-size: 5rem; }
+  .stand-2 { font-size: 4.5rem; }
+  .stand-3 { font-size: 4rem; display: none; } /* Скрываем 3-й для чистоты */
+  
+  /* Плеер поменьше */
+  .soundpad {
+    width: 250px;
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  /* Слайд-шоу поменьше */
+  .slides-wrap { height: 300px; }
+}
+
+/* 📱 БОЛЬШИЕ ТЕЛЕФОНЫ (481px - 767px) */
+@media (max-width: 767px) {
+  body { overflow-x: hidden; }
+  
+  .card {
+    max-width: 95%;
+    padding: 20px 15px;
+    margin: 20px auto;
+    border-width: 2px;
+  }
+  
+  .name { font-size: 55px; letter-spacing: 2px; }
+  .avatar { 
+    width: 120px; 
+    height: 120px; 
+    font-size: 50px; 
+  }
+  
+  .subtitle, .stand-name { 
+    font-size: 11px; 
+    letter-spacing: 2px; 
+  }
+  
+  .info-list { font-size: 12px; }
+  .facts { font-size: 11px; padding: 10px 15px; }
+  
+  /* Стенды скрываем на телефоне */
+  .stand-1, .stand-2, .stand-3 {
+    display: none;
+  }
+  
+  /* Кнопки соцсетей */
+  .social-btn {
+    padding: 14px;
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+  .social-btn .sub { font-size: 10px; }
+  
+  /* Плеер - на всю ширину снизу */
+  .soundpad {
+    width: calc(100% - 20px);
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    padding: 10px;
+  }
+  .soundpad .title { font-size: 11px; }
+  .track-name { font-size: 10px; }
+  .soundpad button {
+    font-size: 9px;
+    padding: 6px 2px;
+  }
+  
+  /* Слайд-шоу */
+  .slides-wrap { height: 250px; }
+  .slide { font-size: 25px; }
+  .slide-title { font-size: 11px; letter-spacing: 2px; }
+  .slide-nav button { 
+    font-size: 10px; 
+    padding: 5px 10px; 
+  }
+  
+  /* Полосы характеристик */
+  .stat-header { font-size: 10px; letter-spacing: 2px; }
+  
+  /* Отступ снизу для плеера */
+  .card { margin-bottom: 200px; }
+}
+
+/* 📱 МАЛЕНЬКИЕ ТЕЛЕФОНЫ (до 480px) */
+@media (max-width: 480px) {
+  .card {
+    padding: 15px 10px;
+    margin: 10px auto;
+    margin-bottom: 220px;
+  }
+  
+  .name { font-size: 45px; }
+  .avatar { 
+    width: 100px; 
+    height: 100px; 
+    font-size: 40px;
+  }
+  
+  .facts { font-size: 10px; }
+  .info-list { font-size: 11px; }
+  
+  /* Слайд-шоу ещё меньше */
+  .slides-wrap { height: 200px; }
+  
+  /* Плеер компактнее */
+  .soundpad {
+    padding: 8px;
+  }
+  .soundpad .btns { 
+    flex-wrap: wrap; 
+    gap: 3px; 
+  }
+  .soundpad button {
+    font-size: 8px;
+    letter-spacing: 0.5px;
+    min-width: 45%;
+  }
+  
+  /* Меньше иероглифов на маленьком экране */
+  .kanji { font-size: 15px !important; opacity: 0.2; }
+  
+  /* Кнопки соцсетей */
+  .social-btn {
+    padding: 12px;
+    font-size: 11px;
+  }
+  
+  .footer { font-size: 10px; letter-spacing: 2px; }
+}
+
+/* 📱 ЛАНДШАФТНАЯ ОРИЕНТАЦИЯ телефона */
+@media (max-width: 900px) and (orientation: landscape) {
+  .card {
+    margin-bottom: 150px;
+  }
+  .soundpad {
+    width: 300px;
+  }
+  .stand-1, .stand-2, .stand-3 { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Фон -->
+<div class="kanji-bg" id="kanjiBg"></div>
+
+<!-- Стенды -->
+<div class="stand stand-1">ゴールド<small>GOLD EXPERIENCE</small></div>
+<div class="stand stand-2">キング<br>クリムゾン<small>KING CRIMSON</small></div>
+<div class="stand stand-3">スティッキィ<br>フィンガーズ<small>STICKY FINGERS</small></div>
+
+<!-- Основная карточка -->
+<div class="card">
+  <div class="avatar">J</div>
+  <div class="name">J</div>
+  <div class="subtitle"> PASSIONE MEMBER</div>
+  <div class="stand-name">[ STAND: GOLD EXPERIENCE ]</div>
+
+  <div class="info-list">
+    &gt; <span>status:</span> online<br>
+    &gt; <span>mode:</span> boss_hunt<br>
+    &gt; <span>access:</span> granted
+  </div>
+
+  <div class="facts">
+    › <b>ЛУЧШИЙ ИГРОК:</b> Brawl Stars и Clash Royale<br>
+    › <b>АНИМЕ:</b> 100+ тайтлов<br>
+    › <b>ПРОФЕССИЯ:</b> Математик
+  </div>
+
+  
+  <!-- ===== СЛАЙД-ШОУ ===== -->
+  <div class="slideshow">
+    <div class="slide-title">✦ МОИ фОТА ✦</div>
+    <div class="slides-wrap" id="slidesWrap">
+      <!-- ⬇ ЗАМЕНИ src НА СВОИ ФОТО ⬇ -->
+      <div class="slide active"><img src="photo1.jpg" alt="1" onerror="this.parentElement.innerHTML='PHOTO 1'"></div>
+      <div class="slide"><img src="photo2.jpg" alt="2" onerror="this.parentElement.innerHTML='PHOTO 2'"></div>
+      <div class="slide"><img src="photo3.jpg" alt="3" onerror="this.parentElement.innerHTML='PHOTO 3'"></div>
+      <div class="slide"><img src="photo4.jpg" alt="4" onerror="this.parentElement.innerHTML='PHOTO 4'"></div>
+      <div class="slide"><img src="photo5.jpg" alt="5" onerror="this.parentElement.innerHTML='PHOTO 5'"></div>
+      <div class="slide"><img src="photo6.jpg" alt="6" onerror="this.parentElement.innerHTML='PHOTO 6'"></div>
+      <div class="slide"><img src="photo7.jpg" alt="7" onerror="this.parentElement.innerHTML='PHOTO 7'"></div>
+      <div class="slide"><img src="photo8.jpg" alt="8" onerror="this.parentElement.innerHTML='PHOTO 8'"></div>
+      <div class="slide"><img src="photo9.jpg" alt="9" onerror="this.parentElement.innerHTML='PHOTO 9'"></div>
+      <div class="slide"><img src="photo10.jpg" alt="10" onerror="this.parentElement.innerHTML='PHOTO 10'"></div>
+      <div class="slide"><img src="photo11.jpg" alt="11" onerror="this.parentElement.innerHTML='PHOTO 11'"></div>
+      <div class="slide"><img src="photo12.jpg" alt="12" onerror="this.parentElement.innerHTML='PHOTO 12'"></div>
+    </div>
+    <div class="slide-nav">
+      <button onclick="prevSlide()">◄ PREV</button>
+      <span class="slide-counter" id="counter">01 / 12</span>
+      <button onclick="nextSlide()">NEXT ►</button>
+    </div>
+  </div>
+
+  <a href="https://t.me/Whoisinthemirror" class="social-btn" target="_blank">&gt; TELEGRAM<span class="sub">@твой_тг</span></a>
+  <a href="https://discord.gg/QJ4Syp9B" class="social-btn" target="_blank">&gt; DISCORD<span class="sub">твой_дискорд</span></a>
+
+  <div class="footer">[ ARRIVEDERCI // GOLDEN_WIND ]</div>
+</div>
+
+
+<div class="soundpad">
+  <div class="title">♪ SOUNDPAD ♪</div>
+  <div class="track-name" id="trackName">TRACK 1</div>
+  <div class="btns">
+    <button onclick="prevTrack()">⏮ PREV</button>
+    <button onclick="playAudio()">▶ PLAY</button>
+    <button onclick="pauseAudio()">❚❚</button>
+    <button onclick="nextTrack()">NEXT ⏭</button>
+  </div>
+  <div class="vol-row">
+    <span>VOL</span>
+    <input type="range" id="vol" min="0" max="100" value="50" oninput="setVol(this.value)">
+  </div>
+  <div class="status" id="status"></div>
+  <audio id="audio" loop></audio>
+</div>
+
+<script>
+
+  const kanjiChars = ['ゴ','ジ','ョ','奇','妙','冒','険','黄','金','風','ス','タ','ン','ド','パ','ッ','シ','J','O'];
+  const bg = document.getElementById('kanjiBg');
+  for (let i = 0; i < 60; i++) {
+    const k = document.createElement('div');
+    k.className = 'kanji';
+    k.textContent = kanjiChars[Math.floor(Math.random() * kanjiChars.length)];
+    k.style.left = Math.random() * 100 + '%';
+    k.style.fontSize = (Math.random() * 30 + 15) + 'px';
+    k.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    k.style.animationDelay = (Math.random() * 10) + 's';
+    bg.appendChild(k);
+  }
+
+
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  let currentSlide = 0;
+
+  function showSlide(i) {
+    slides.forEach(s => s.classList.remove('active'));
+    currentSlide = (i + slides.length) % slides.length;
+    slides[currentSlide].classList.add('active');
+    counter.textContent = String(currentSlide + 1).padStart(2,'0') + ' / ' + String(slides.length).padStart(2,'0');
+  }
+  function nextSlide() { showSlide(currentSlide + 1); }
+  function prevSlide() { showSlide(currentSlide - 1); }
+  
+  setInterval(nextSlide, 4000);
+
+
+  const tracks = [
+    { name: "GIORNO'S THEME", src: "track1.mp3" },   // ⬅ ЗАМЕНИ на свою музыку
+    { name: "FIGHTING GOLD",   src: "track2.mp3" },   // ⬅ ЗАМЕНИ на свою музыку
+    { name: "TRAITOR'S REQUIEM", src: "track3.mp3" }  // ⬅ ЗАМЕНИ на свою музыку
+  ];
+
+  const audio = document.getElementById('audio');
+  const status = document.getElementById('status');
+  const trackName = document.getElementById('trackName');
+  let currentTrack = 0;
+  audio.volume = 0.5;
+
+  function loadTrack(i) {
+    currentTrack = (i + tracks.length) % tracks.length;
+    audio.src = tracks[currentTrack].src;
+    trackName.textContent = (currentTrack+1) + '. ' + tracks[currentTrack].name;
+  }
+  function playAudio() { audio.play(); status.textContent = ' играет ♪'; }
+  function pauseAudio() { audio.pause(); status.textContent = ' пауза'; }
+  function nextTrack() { loadTrack(currentTrack + 1); playAudio(); }
+  function prevTrack() { loadTrack(currentTrack - 1); playAudio(); }
+  function setVol(v) { audio.volume = v / 100; }
+
+  loadTrack(0); 
+</script>
+
+</body>
+</html>
